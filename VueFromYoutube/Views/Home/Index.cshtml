@@ -1,31 +1,63 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+﻿<div id="vueapp">
+    <input type="text" v-model="firstname"/> @*2 way binding here using v-model*@
+    <p>{{firstname}}</p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
+
+<script>
+    var mainView = new Vue({
+        el: '#vueapp',
+        data: {
+            firstname: "",
+        },
+    });
+</script>
+
+
+<div id="app">
+    <input type="text" v-on:input="changeTitle" />
+    <p>{{title}}</p>
+    <p>{{sayHello()}}</p>
+    <p>{{sayHelloUsingProperty()}}</p>
+    <p>
+        @*Create a web link - below doesn't work as we can only use {{ }} where text is in place, not html elements'*@
+        <a href="{{link}}">Google </a>
+    </p>
+    <p>
+        @*Create a weblink - this does work*@
+        <a v-bind:href="link"> Google working</a>
+    </p>
+    <!-- title is only going to be rendered once, then when the title changes dynamically in the program, further changes will be ignored here-->
+    <h1 v-once> {{title}}</h1>
 </div>
+
+
+
+
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            title: 'hello world',
+            link: 'http://www.google.co.uk',
+        },
+        methods: {
+            changeTitle: function (event) {
+                this.title = event.target.value;
+            },
+
+            sayHello: function () {
+                return 'Hello';
+            },
+            // use 'this' anywhere inside of the Vue object to access properties
+            //don't need this in html / dom though
+            sayHelloUsingProperty: function () {
+                return this.title;
+            }
+
+        }
+    });
+
+</script>
