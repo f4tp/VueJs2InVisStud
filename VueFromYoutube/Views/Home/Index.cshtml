@@ -1,9 +1,12 @@
-﻿<div id="vueapp">
-    <input type="text" v-model="firstname"/> @*2 way binding here using v-model*@
+﻿@* Youtube variant for Visual Studio *@
+@*https://www.youtube.com/watch?v=qDr180F8hnM&t=*@
+
+
+@*Youtube implementation implementation------------------------------------------------------*@
+<div id="vueapp">
+    <input type="text" v-model="firstname" /> @*2 way binding here using v-model*@
     <p>{{firstname}}</p>
 </div>
-
-
 
 <script>
     var mainView = new Vue({
@@ -14,25 +17,31 @@
     });
 </script>
 
-
+@* Udemy chapter 1+2 implementation--------------------------------------------------*@
 <div id="app">
     <input type="text" v-on:input="changeTitle" />
     <p>{{title}}</p>
     <p>{{sayHello()}}</p>
     <p>{{sayHelloUsingProperty()}}</p>
     <p>
-        @*Create a web link - below doesn't work as we can only use {{ }} where text is in place, not html elements'*@
+        @*Create a web link - below doesn't work as we can only use {{ }} in places requiring strings, not html elements'*@
         <a href="{{link}}">Google </a>
     </p>
+        
     <p>
-        @*Create a weblink - this does work*@
+        @*Create a weblink - this does work though*@
         <a v-bind:href="link"> Google working</a>
     </p>
-    <!-- title is only going to be rendered once, then when the title changes dynamically in the program, further changes will be ignored here-->
+    @*title is only going to be rendered once, then when the title changes dynamically in the program, further changes will be ignored here*@
     <h1 v-once> {{title}}</h1>
+    @*This will display as text not html, as by default, Vue escapes html to stop cross site scripting attempts (XSS)*@
+    <p>{{finishedLink}}</p>
+
+    @*using the v-html un-escapes the html element, and this will work*@
+    @* CAUTION - don't use this, exposes you to XSS attacks*@
+    <p v-html="finishedLink"></p>
+ 
 </div>
-
-
 
 
 
@@ -42,21 +51,21 @@
         data: {
             title: 'hello world',
             link: 'http://www.google.co.uk',
+            finishedLink: '<a href="http://google.co.uk"> Goooodle </a>'
         },
         methods: {
             changeTitle: function (event) {
-                this.title = event.target.value;
+                this.title = event.target.title;
             },
 
             sayHello: function () {
                 return 'Hello';
             },
-            // use 'this' anywhere inside of the Vue object to access properties
+            // use 'this' anywhere inside of the Vue object gives access to things anywhere within this object, for example, properties declared within another delimited area within the Vue object
             //don't need this in html / dom though
             sayHelloUsingProperty: function () {
                 return this.title;
             }
-
         }
     });
 
