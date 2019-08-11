@@ -25,7 +25,7 @@
     <p>{{sayHelloUsingProperty()}}</p>
     <p>
         @*Create a web link - below doesn't work as we can only use {{ }} in places requiring strings, not html elements'*@
-        <a href="{{link}}">Google </a>
+        @*<a href="{{link}}">Google </a>*@
     </p>
         
     <p>
@@ -68,5 +68,279 @@
             }
         }
     });
+
+</script>
+
+
+@* assignment 1 -----------------------------------------------------------------------*@
+<div id="exercise">
+    <!-- 1) Fill the <p> below with your Name and Age - using Interpolation -->
+    <p>VueJS is pretty cool - {{YOUR_NAME}} ({{AGE}})</p>
+    <!-- 2) Output your age, multiplied by 3 -->
+    <p>{{AGE * 3}}</p>
+    <!-- 3) Call a function to output a random float between 0 and 1 (Math.random()) -->
+    <p>{{RandomFloatBetweenZeroAndOne()}}</p>
+    <!-- 4) Search any image on Google and output it here by binding the "src" attribute -->
+    <div>
+        <img style="width:100px;height:100px" v-bind:src="link">
+    </div>
+    <!-- 5) Pre-Populate this input with your name (set the "value" attribute) -->
+    <div>
+        <input type="text" v-model="YOUR_NAME">
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el: '#exercise',
+        data: {
+            YOUR_NAME: 'Paul',
+            AGE: '35',
+            link: "https://www.dinneratthezoo.com/wp-content/uploads/2018/06/buffalo-chicken-nuggets-4-500x500.jpg",
+        },
+        methods: {
+            RandomFloatBetweenZeroAndOne: function () {
+                return Math.random();
+            },
+        },
+        
+
+    });
+
+</script>
+
+@*Video 17 onwards----------------------------------------------------------------*@
+<div id="appTwo">
+    @*v-on takes an argument that is the name of the event that it needs to listen to *@
+    @* examples are click mouseenter mouseleave etc*@
+
+    <button v-on:click="increment(2, $event)"> Click Me! </button>
+    @* simple javascript can be replaced inside of the v- elements, as below - counter++ is incrementing the copunter property*@
+    <button v-on:click="counter++"> Click Me! </button>
+    <p>{{counter}}</p>
+
+    <p>{{counter > 9 ? "Greater than or equal to 10" : "Smaller than 10"}}</p>
+    @* the event fired holds data about that event, e.g. click event holds coordinates of where it happened, and this is automatically passed into the Vue object the div / other element registered with the Vue object is associated with to access it... underneath*@
+    <p v-on:mousemove="updateCoords()">
+        Coordinates: {{x}} / {{y}}
+
+        - <span v-on:mousemove="dummy($event)"> DEAD SPOT </span>
+        @*.stop is shorthand way for stopping propagation, rather than passing event object through and calling event.stopPropagation() in method*@
+        - <span v-on:mousemove.stop=""> DEAD SPOT 2 </span>
+        @*instead of 'stop' can use 'prevent' which prevents default behaviour of an element, for example, default event on a button is 'click'.. it cancels this*@
+
+    </p>
+    @* keyup will execute every time any key is de-pressed, modifying it with .enter means only on enter key, most buttons have a name in Vue / JS, chain them together to combine keys*@
+    <input type="text" v-on:keyup.enter.space="alertMe()" />
+
+</div>
+
+<script>    
+    new Vue({
+        el: '#appTwo',
+        data: {
+            counter: 0,
+            x: 0,
+            y: 0,
+        },
+        methods: {
+
+            increment: function (step, event) {
+                
+                if (event.altKey) {
+                    this.counter += 5;
+                } else {
+                    this.counter += step;
+                }
+            },
+
+            updateCoords: function () {
+                this.x = event.clientX;
+                this.y = event.clientY;
+
+            },
+
+            dummy: function (event) {
+                @*stop propagation stops the event bubbling up / down to elements *@
+                @*in other words, only handle this event's routine within this element don't let it propagate up to any other element which might hold this element inside of it*@
+                event.stopPropagation();
+            },
+            alertMe: function () {
+                alert('alert');
+            }
+
+            
+        }
+    });
+
+
+</script>
+
+@* Assignment 2 ---------------------------------------------------------------------*@
+
+<div id="exerciseTwo">
+    <!-- 1) Show an alert when the Button gets clicked -->
+    <div>
+        <button v-on:click="alertMe()">Show Alert</button>
+    </div>
+    <!-- 2) Listen to the "keydown" event and store the value in a data property (hint: event.target.value gives you the value) -->
+    <div>
+        @*<input type="text" v-on:keydown="outPutToValueProperty($event)">*@
+        @*another way to do the above, is below*@
+        <input type="text" v-on:keydown="value = $event.target.value" />
+        <p>{{ value }}</p>
+    </div>
+    <!-- 3) Adjust the example from 2) to only fire if the "key down" is the ENTER key -->
+    <div>
+        <input type="text" v-on:keydown.enter="outPutToValueProperty($event)">
+        <p>{{ value }} </p>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#exerciseTwo',
+        data: {
+            value: '',
+        },
+        methods: {
+            alertMe: function () {
+                alert('alert');
+            },
+            outPutToValueProperty: function (event) {
+                this.value = event.target.value;
+            }
+        
+        }
+
+    });
+
+
+</script>
+
+@*Video 23 onwards --------------------------------------------------------------------*@
+
+<div id="appThree">
+    @*v-model creates two way binding, in this changes to the text in the textbox will update the name, and anything that updates the name will also update the text in the textbox *@
+    <input type="text" v-model="name" />
+    <p>{{name}}</p>
+
+    <button v-on:click="counter++">Increment</button>
+    @*shorthand way in Vue is @, but in Razor views, @@*@
+
+    @*below is a way to achieve a shorthand way to do v-bind also*@
+    <a v-bind:href="link">content with bind</a>
+    <a :href="link">content shorthand</a>
+    <button @@click="counter++"> Increment again</button>
+    <button v-on:click="counter--">Decrement</button>
+    <button v-on:click="secondCounter++">Increment Second</button>
+    <p>Counter: {{counter}} | {{secondCounter}}</p>
+    <p>Result: {{result()}} | {{output}}</p>
+</div>
+
+<script>
+    new Vue({
+        el: '#appThree',
+        data: {
+            name: "Max",
+            counter: 0,
+            secondCounter: 0,
+            //result: '',
+            link: "www.link.com"
+        },
+
+        @*Difference between computer & methods*@
+        @*Computed is aware of which properties are being updated within it so only runs when something inside of it is modified | methods run every time, causing unnecessary method calls > taking longer*@
+     
+        computed: {
+            @*anything stored in computed is used like a property, not a method call*@
+            output: function () {
+                return this.counter > 5 ? "Greater than 5" : "Smaller than 5";
+            }
+        },
+
+        @*like computed except used the opposite way around, properties defined in here have to exist within 'data' field also *@
+        @*best practice to use computed over watched though as they are more optimised*@
+        @*computed doesn't work with sync tasks. watched does though*@
+        @*watched more basically is used to execute some code when a property is changed*@
+        watch: {
+            @*specify the code you want to execute every time this property changes*@
+            @*value holds the value that is changing for the property*@
+            @*in watch, this is a callback function, therefore you have to store the Vue object in its own variable (vm) at the point in the code below to set the scope properly, because using 'this' here will go beyond the scope of which the object can be accessed...*@
+            counter: function (value) {
+                var vm = this;
+                setTimeout(function () {
+                    vm.counter = 0;
+                }, 2000)
+            }
+        },
+
+
+        methods: {
+
+            result: function(){
+                return this.counter > 5 ? "Greater than 5" : "Smaller than 5";
+            },
+
+
+            increment: function () {
+                this.counter++;
+                this.result = this.counter > 5 ? "Greater than 5" : "Smaller than 5";
+            },
+            @* another way to define methods in Vue, using ES 6 not ES5... ES5 runs in all browsers, ES6 does not yet*@
+            methodAgain() {
+
+            }
+
+        }
+
+    });
+
+</script>
+
+@*Assignment Three----------------------------------------------------------------*@
+
+<div id="exerciseThree">
+    <!-- 1) Show a "result" of 'not there yet' as long as "value" is not equal to 37 - you can change "value" with the buttons. Print 'done' once you did it -->
+    <div>
+        <p>Current Value: {{ value }}</p>
+        <button @@click="value += 5">Add 5</button>
+        <button @@click="value += 1">Add 1</button>
+        <p>{{ result }}</p>
+    </div>
+    <!-- 2) Watch for changes in the "result" and reset the "value" after 5 seconds (hint: setTimeout(..., 5000) -->
+    <div>
+        <input type="text">
+        <p>{{ value }}</p>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#exerciseThree',
+        data: {
+            value: 0,
+        },
+        computed: {
+            result: function (value) {
+                this.resultAgain = value;
+                return this.value == 37 ? "done" : "Not there yet"
+            }
+        },
+        watch: {
+            result: function (result) {
+                var vm = this;
+                setTimeout(function () {
+                    vm.value = 0;
+                }, 5000)
+            }
+        },
+        methods: {
+
+        }
+
+    });
+
 
 </script>
