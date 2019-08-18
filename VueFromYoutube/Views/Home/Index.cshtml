@@ -27,7 +27,7 @@
         @*Create a web link - below doesn't work as we can only use {{ }} in places requiring strings, not html elements'*@
         @*<a href="{{link}}">Google </a>*@
     </p>
-        
+
     <p>
         @*Create a weblink - this does work though*@
         <a v-bind:href="link"> Google working</a>
@@ -40,7 +40,7 @@
     @*using the v-html un-escapes the html element, and this will work*@
     @* CAUTION - don't use this, exposes you to XSS attacks*@
     <p v-html="finishedLink"></p>
- 
+
 </div>
 
 
@@ -104,7 +104,7 @@
                 return Math.random();
             },
         },
-        
+
 
     });
 
@@ -136,7 +136,8 @@
 
 </div>
 
-<script>    
+<script>
+
     new Vue({
         el: '#appTwo',
         data: {
@@ -147,7 +148,7 @@
         methods: {
 
             increment: function (step, event) {
-                
+
                 if (event.altKey) {
                     this.counter += 5;
                 } else {
@@ -170,7 +171,7 @@
                 alert('alert');
             }
 
-            
+
         }
     });
 
@@ -211,7 +212,7 @@
             outPutToValueProperty: function (event) {
                 this.value = event.target.value;
             }
-        
+
         }
 
     });
@@ -252,7 +253,7 @@
 
         @*Difference between computer & methods*@
         @*Computed is aware of which properties are being updated within it so only runs when something inside of it is modified | methods run every time, causing unnecessary method calls > taking longer*@
-     
+
         computed: {
             @*anything stored in computed is used like a property, not a method call*@
             output: function () {
@@ -342,5 +343,167 @@
 
     });
 
+
+</script>
+
+
+
+
+@*videos 27 to 31*@
+<div>
+    <div id="appFour">
+        <div class="demo"
+             @@click="attachRed = !attachRed"
+             :class="divClasses">
+
+        </div>
+
+
+        <div class="demo" :class="{red: attachRed}"></div>
+        <div class="demo" :class="color"></div>
+        <div class="demo" :class="[color,{red: attachRed} ]"></div>
+        <hr />
+
+        <input type="text" v-model="color" />
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: "#appFour",
+        data: {
+            attachRed: false,
+            color: 'green'
+        },
+        computed: {
+            divClasses: function () {
+                return {
+                    red: this.attachRed,
+                    blue: !this.attachRed
+
+                }
+
+            }
+
+        }
+
+    });
+</script>
+
+
+
+
+
+
+
+
+@* assignment 4------------------------------------------*@
+
+<div id="exerciseFour">
+
+    <!-- 1) Start the Effect with the Button. The Effect should alternate the "highlight" or "shrink" class on each new setInterval tick (attach respective class to the div with id "effect" below) -->
+    <div>
+        <button @@click="toggleEffects()">
+            Start Effect
+        </button>
+        <div :class="{highlight: startEffect, shrink: startEffect2 }" id="effect"></div>
+    </div>
+
+
+
+
+
+
+    <!-- 2) Create a couple of CSS classes and attach them via the array syntax -->
+    <div  @@click="enableClassOne = !enableClassOne"
+         :class="[{classOne: enableClassOne}, {classTwo: !enableClassOne}]"
+         >
+        I got no class :(
+
+
+    </div>
+  
+
+
+    <!-- 3) Let the user enter a class (create some example classes) and attach it -->
+    <div>
+        <input type="text" v-model="classEnabled">
+        <div id="effect" :class="classEnabled"></div>
+    </div>
+
+
+    <!-- 4) Let the user enter a class and enter true/ false for another class  and attach the classes -->
+    <div>
+        <input type="text" v-model="userClass">
+        <input type="text" v-model="isVisible">
+        <div :class="[{visible: isVisible}, userClass]"></div>
+    </div>
+
+
+
+
+
+    <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
+    <div>
+        <input type="text" v-model="myStyle.backgroundColor">
+        <div :style="myStyle"></div>
+    </div>
+
+
+
+
+    <!-- 6) Create a simple progress bar with setInterval and style bindings. Start it by hitting the below button. -->
+    <div>
+       
+    </div>
+</div>
+
+
+<script>
+    new Vue({
+        el: "#exerciseFour",
+        data: {
+
+            //Task1
+            startEffect: false,
+            startEffect2: true,
+            //Task 2  
+            enableClassOne: true,
+            //Task3
+            classEnabled: 'green',
+            //Task4
+            userClass: '',
+            isVisible: true,
+
+            myStyle: {
+                width: '100px',
+                height: '150px',
+                backgroundColor: 'gray'
+            },
+
+            progressBar: {
+                width: '0px',
+                backgroundColor: 'red'
+            },
+            //classOne: 'classOne',
+            toggleEffect1: false,
+            toggleEffect2: true
+
+        },
+        methods: {
+            toggleEffects: function () {
+                this.startEffect = !this.startEffect;
+                this.startEffect2 = !this.startEffect2;
+            },
+
+           
+        },
+        computed: {
+
+        }
+
+
+
+    })
 
 </script>
